@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi barrio Las Aguas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg class="bunting" viewBox="0 0 1100 60" aria-hidden="true" focusable="false"><path d="M0 8 Q550 36 1100 8" fill="none" stroke="var(--fg)" stroke-width="2"/><polygon points="5.0,8.3 45.0,10.2 25.0,43.2" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="55.0,10.7 95.0,12.4 75.0,45.6" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="105.0,12.8 145.0,14.4 125.0,47.6" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="155.0,14.8 195.0,16.2 175.0,49.5" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="205.0,16.5 245.0,17.7 225.0,51.1" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="255.0,18.0 295.0,19.0 275.0,52.5" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="305.0,19.2 345.0,20.1 325.0,53.7" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="355.0,20.2 395.0,20.9 375.0,54.6" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="405.0,21.0 445.0,21.5 425.0,55.3" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="455.0,21.6 495.0,21.9 475.0,55.7" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="505.0,21.9 545.0,22.0 525.0,56.0" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="555.0,22.0 595.0,21.9 575.0,56.0" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="605.0,21.9 645.0,21.6 625.0,55.7" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="655.0,21.5 695.0,21.0 675.0,55.3" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="705.0,20.9 745.0,20.2 725.0,54.6" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="755.0,20.1 795.0,19.2 775.0,53.7" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="805.0,19.0 845.0,18.0 825.0,52.5" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="855.0,17.7 895.0,16.5 875.0,51.1" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="905.0,16.2 945.0,14.8 925.0,49.5" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="955.0,14.4 995.0,12.8 975.0,47.6" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="1005.0,12.4 1045.0,10.7 1025.0,45.6" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/><polygon points="1055.0,10.2 1095.0,8.3 1075.0,43.2" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/></svg>
+
+<main>
+  <header>
+    <span class="eyebrow">Localidad de Santa Fé · Bogotá</span>
+    <h1>Mi barrio, Las Aguas</h1>
+    <p>Llevo tres años viviendo en esta zona del centro. Oficialmente mi casa queda en La Veracruz, pero yo siempre la he sentido parte de Las Aguas. Camino todos los días hasta la Universidad de los Andes y el barrio me da almuerzo, helados y escenas raras que casi siempre dan risa.</p>
+  <ul class="stats" aria-label="Mi barrio en cifras">
+    <li><b id="st-lugares">25</b><span>lugares que visito</span></li>
+    <li><b id="st-comida">14</b><span>para comer</span></li>
+    <li><b id="st-dist">630 m</b><span>caminando a la U</span></li>
+    <li><b>3</b><span>límites en el mapa</span></li>
+  </ul>
+  </header>
+
+  <section>
+    <span class="eyebrow">Cartografía</span>
+    <h2>Dónde queda y hasta dónde llega</h2>
+    <p>Puedes mover y hacer zoom al mapa. Hay tres límites. La línea azul es el sector catastral oficial Las Aguas (003103) y la línea morada es el sector oficial La Veracruz (003109), los dos de Catastro Bogotá. La línea punteada de ladrillo es el que yo siento como mi barrio. El panel del mapa permite prender y apagar cada capa.</p>
+    <div id="map" role="application" aria-label="Mapa interactivo de Las Aguas"></div>
+    <ul class="legend" aria-label="Leyenda del mapa">
+      <li><i class="sw" style="border-color:var(--water)"></i>Las Aguas, sector oficial</li>
+      <li><i class="sw" style="border-color:var(--vera)"></i>La Veracruz, sector oficial</li>
+      <li><i class="sw dash" style="border-color:var(--lim)"></i>Mi límite percibido</li>
+      <li><i class="sw" style="border-color:var(--fg);border-top-width:4px"></i>Ruta a pie a la U</li>
+      <li><i class="dot" style="background:var(--leaf)"></i>Comida</li>
+      <li><i class="dot" style="background:var(--water)"></i>Tiendas</li>
+      <li><i class="dot" style="background:var(--brick)"></i>Ocio, deporte y cultura</li>
+    </ul>
+    <p class="note">Posiciones de los lugares aproximadas.</p>
+    <div id="place-panel" class="panel" hidden>
+      <p>Modo ubicar. Elige un lugar y haz clic en el mapa donde queda. Para la ruta, elige "Ruta" y haz clic en cada giro, de la casa hacia la universidad. Cuando termines, copia el código.</p>
+      <select id="tool" aria-label="Qué ubicar"></select>
+      <textarea id="place-code" rows="8" readonly aria-label="Código de lugares"></textarea>
+      <button type="button" id="copy-place" class="btn">Copiar código</button>
+    </div>
+    <h3>¿Es mi barrio?</h3>
+    <p>Según Catastro Bogotá, mi casa queda en el sector de La Veracruz, a pocas cuadras del límite con Las Aguas. Aun así, yo siempre he considerado que vivo en Las Aguas y me mantengo en ese barrio. Es donde estudio, donde almuerzo y donde paso casi todo el día. Mi límite percibido incluye la zona donde vivo, pero el límite oficial no. Esa diferencia entre el barrio que dice el mapa y el que uno siente es justo lo que quería mostrar.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Barrio vivido</span>
+    <h2>Lo que hago en Las Aguas</h2>
+    <p>Mi barrio se vive comiendo. Estos son los lugares donde almuerzo, tomo helado, compro lo que necesito y paso el rato con mis amigos.</p>
+    <p class="note">Toca una tarjeta para verla en el mapa.</p>
+    <ul class="places">
+      <li tabindex="0" role="button" data-lugares="Empanadas de Henry" aria-label="Ver Empanadas de Henry en el mapa"><b>Empanadas de Henry</b><span>La parada rápida cuando hay hambre y poco tiempo. Sus empanadas de queso son mis favoritas y cuestan 4.000 pesos.</span></li>
+      <li tabindex="0" role="button" data-lugares="El Corral" aria-label="Ver El Corral en el mapa"><b>El Corral</b><span>Mi gusto culposo. Cada mes, sí o sí, voy a comerme una buena hamburguesa en combo.</span></li>
+      <li tabindex="0" role="button" data-lugares="Arepas" aria-label="Ver Arepas en el mapa"><b>Arepas</b><span>Un lugar pequeño, al frente de mi casa, donde venden arepas rellenas. Son deliciosas y súper recomendadas.</span></li>
+      <li tabindex="0" role="button" data-lugares="Central X" aria-label="Ver Central X en el mapa"><b>Central X</b><span>Aquí almuerzo entre semana. Tiene un menú variado de platos del día, me gusta pedirlo con pechuga y cuesta 15.000 pesos.</span></li>
+      <li tabindex="0" role="button" data-lugares="Crepes &amp; Waffles" aria-label="Ver Crepes y Waffles en el mapa"><b>Crepes &amp; Waffles</b><span>Como soy fanática del helado, de vez en cuando vengo por un cono de dos bolas. Son muy deliciosos y hay muchísimos sabores para probar.</span></li>
+      <li tabindex="0" role="button" data-lugares="One Burrito 1|One Burrito 2" aria-label="Ver One Burrito en el mapa"><b>One Burrito</b><span>Compro bowls cuando mi presupuesto para el almuerzo es un poco más amplio. Son muy ricos y la porción es buena. También puedes cambiar el bowl por un burrito, y los dos cuestan lo mismo.</span></li>
+      <li tabindex="0" role="button" data-lugares="City U" aria-label="Ver Aramitas en el mapa"><b>Aramitas</b><span>Me encanta su comida a la carta, y me trae bonitos recuerdos: iba a almorzar con un profesor al que le tengo mucho aprecio y con otros compañeros que veían clase con él.</span></li>
+      <li tabindex="0" role="button" data-lugares="City U" aria-label="Ver City U en el mapa"><b>City U</b><span>Es donde queda Aramitas. A veces voy con amigos a jugar billar o ping pong.</span></li>
+      <li tabindex="0" role="button" data-lugares="La Gata Golosa" aria-label="Ver La Gata Golosa en el mapa"><b>La Gata Golosa</b><span>Es el centro deportivo de la universidad. Me gusta ir mucho a hacer ejercicio o practicar algun deporte, como el Baloncesto.</span></li>
+      <li tabindex="0" role="button" data-lugares="Cafetería 1|Cafetería 2" aria-label="Ver Cafeterías en el mapa"><b>Cafeterías</b><span>Cuando quiero salir con mis amigos a un lugar tranquilo para charlar y comer algo, vamos a alguna de estas cafeterías. Son muy acogedoras y tienen un ambiente agradable para pasar el rato.</span></li>
+      <li tabindex="0" role="button" data-lugares="Box Plaza" aria-label="Ver Box Plaza en el mapa"><b>Box Plaza</b><span>Un lugar con containers donde encuentras comida de todo tipo: hamburguesas, italiana, mexicana, asiática y muchas opciones más. Siempre hay gente. Mi favorito es Santo Gyro, de comida griega, y me encanta su gyro mixto con papas fritas.</span></li>
+      <li tabindex="0" role="button" data-lugares="Chick n Chips" aria-label="Ver Chick n Chips en el mapa"><b>Chick n Chips</b><span>Muy conocido por sus tenders de pollo. Alrededor de la universidad siempre se ven estudiantes cargando sus cajas para llevar.</span></li>
+      <li tabindex="0" role="button" data-lugares="Frijol y Ajiacos" aria-label="Ver Frijol y Ajiacos en el mapa"><b>Frijol y Ajiacos</b><span>Un restaurante relativamente nuevo donde solo venden, literalmente, frijoles y ajiacos. Es muy rico y a buen precio.</span></li>
+      <li tabindex="0" role="button" data-lugares="Hornitos" aria-label="Ver Hornitos en el mapa"><b>Hornitos</b><span>Aquí te das un lujito: un desayuno muy delicioso o un postre para el camino.</span></li>
+      <li tabindex="0" role="button" data-lugares="Doña Blanca" aria-label="Ver Doña Blanca en el mapa"><b>Doña Blanca</b><span>Una panadería donde consigues desayunos, almuerzos y cenas. Es pequeña, pero siempre está llena.</span></li>
+      <li tabindex="0" role="button" data-lugares="Cinemateca" aria-label="Ver Cinemateca en el mapa"><b>Cinemateca</b><span>Me gusta ir los fines de semana a ver películas nuevas en cartelera. La entrada es muy económica y ahí mismo hay una tienda con cosas muy curiosas.</span></li>
+      <li tabindex="0" role="button" data-lugares="El Mono Papelería" aria-label="Ver El Mono Papelería en el mapa"><b>El Mono Papelería</b><span>Aquí encuentras todo lo que necesitas, desde una impresión hasta dulces de cualquier tipo.</span></li>
+      <li tabindex="0" role="button" data-lugares="Olímpica" aria-label="Ver Olímpica en el mapa"><b>Olímpica</b><span>El supermercado más cercano a mi casa. Voy cuando busco ingredientes que no encuentro en otros lugares.</span></li>
+      <li tabindex="0" role="button" data-lugares="D1" aria-label="Ver D1 en el mapa"><b>D1</b><span>Supermercado con gran variedad de productos a precios competitivos.</span></li>
+      <li tabindex="0" role="button" data-lugares="Ara" aria-label="Ver Ara en el mapa"><b>Ara</b><span>Cadena de tiendas con gran variedad de productos a precios competitivos.</span></li>
+      <li tabindex="0" role="button" data-lugares="Centro comercial" aria-label="Ver Centro comercial en el mapa"><b>Centro comercial</b><span>Aquí hay muchísimos tipos de tiendas: peluquerías, salones de belleza, modisterías donde te arreglan la ropa, canchas de fútbol y más. También es otro de mis lugares del desvare.</span></li>
+      <li tabindex="0" role="button" data-lugares="Oxxo 1|Oxxo 2|Oxxo 3" aria-label="Ver Oxxos en el mapa"><b>Oxxos</b><span>La tienda del desvare, para cuando necesito algo para tomar o para picar entre clases.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <span class="eyebrow">Recorrido diario</span>
+    <h2>De la casa a la universidad</h2>
+    <p>Salgo de mi casa y camino hacia el oriente, subiendo hacia Los Andes. Son más o menos 600 metros, a pie, sin necesidad de transporte. La ruta está dibujada en el mapa en trazo grueso. A veces cambio el camino y me voy por la estación de Las Aguas.</p>
+    <p>Siempre que camino por esta zona voy muy precavida. No suelo dejar que la gente se me acerque, porque por aquí roban bastante. Es un recorrido corto, pero lo hago con los ojos abiertos.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Fuera del barrio</span>
+    <h2>Más allá de Las Aguas</h2>
+    <p>No cuento la Séptima como parte de mi barrio, pero de vez en cuando, los domingos, salgo para allá. A veces voy al mercado de las pulgas y otras a dar un septimazo. Lo que más me gusta es chismosear los libros que hay en la Panamericana de la Séptima.</p>
+    <p>También me encanta probar restaurantes nuevos, y los fines de semana, cuando tengo tiempo, salgo a buscar alguno. Para eso me voy a La Candelaria. No la considero parte de mi barrio ni la incluí en mi límite, pero tiene joyas ocultas de comida y una vez que las encuentras ya no quieres dejar de buscar más.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Mi historia en el barrio</span>
+    <h2>Mis tres años en Las Aguas</h2>
+    <div class="relato">
+      <p>Hace tres años llegué a Bogotá y a esta zona para estudiar. Al principio vivía en otro lugar del mismo sector y este semestre me mudé, pero sigo a pocas cuadras de donde empecé, así que para mí el barrio sigue siendo el mismo. Desde entonces he caminado estas calles tantas veces que ya sé por dónde me conviene ir según la hora y qué locales siguen abiertos cuando llego.</p>
+      <p>Mis días aquí tienen dos caras. Cuando salgo de mi casa en la mañana hace mucho frío y hay poca gente: los locales apenas están abriendo o recién abrieron, y el centro todavía parece dormido. Cuando regreso ya es de noche, los locales están cerrados y lo que sigue abierto son las arepas que me gustan. Algunas noches hay bastante tráfico, y varias personas se paran en la calle, frente a donde vivo, a tratar de controlarlo. Lo único que logran es empeorarlo y ganarse un par de insultos de los carros.</p>
+      <p>Y entre una cara y la otra pasan cosas que no pasarían en ningún otro lado. Una vez iba caminando con unos amigos y un señor me miró y me empezó a ladrar. Otra vez estaba comiendo salchipapa en un restaurante y vi a dos personas con uniformes amarillos caminando por el semáforo cuando estaba en rojo. Se pusieron a hacer una coreografía como de robots, sin pedir dinero, y lo repitieron muchas veces en el mismo semáforo. Son escenas raras, pero casi siempre me sacan una sonrisa.</p>
+      <p>Con el tiempo uno empieza a reconocer caras. Ya reconozco a las personas que trabajan en los lugares a los que suelo ir, y también a un señor que siempre veo por la calle, al lado de la estación de Las Aguas, con un Pokeron en la mano. No sé quién es, pero ya hace parte del paisaje de mi recorrido.</p>
+      <blockquote class="quote">Lo caótico, lo extraño y lo chistoso.</blockquote>
+      <p>El barrio no ha cambiado mucho en estos tres años. Han construido más edificios, han cambiado algunos locales y han arreglado vías, pero se siente igual. Por eso, si algún día me voy, eso es lo que más voy a extrañar: lo caótico, lo extraño y lo chistoso que es vivir por acá.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Historia del barrio</span>
+    <h2>Un barrio hecho de agua</h2>
+    <p>La historia del lugar es mucho más larga que la mía, y empieza con el agua.</p>
+    <ul class="timeline">
+      <li><b>Antes de la ciudad</b><span>Los muiscas desarrollaron su sistema social alrededor del río que llamaban Vicachá, &ldquo;el resplandor de la noche&rdquo;. Más tarde recibió el nombre de San Francisco, igual que la primera iglesia construida en Bogotá durante la colonia. <a href="https://bogota.gov.co/mi-ciudad/turismo/caminata-rio-san-francisco-vicacha">[Bogotá.gov.co]</a></span></li>
+      <li><b>1600</b><span>Comienza a levantarse la ermita de Nuestra Señora de las Aguas, a la orilla del río San Francisco, en medio de numerosas quebradas y manantiales. <a href="https://www.100libroslibres.com/bogota-360-la-ciudad-interior-claustro-de-las-aguas-artesanias-de-colombia">[Bogotá 360]</a></span></li>
+      <li><b>Hacia 1610</b><span>El presbítero Juan Cotrina y Copete toma la iniciativa de convertir la ermita en una iglesia con claustro para los dominicos. El claustro queda concluido en 1650. <a href="https://www.100libroslibres.com/bogota-360-la-ciudad-interior-claustro-de-las-aguas-artesanias-de-colombia">[Bogotá 360]</a></span></li>
+      <li><b>Década de 1640</b><span>Según la Alcaldía de Bogotá, el presbítero Juan Cotrina de Valero encabeza la construcción de una modesta capilla para albergar una imagen de Nuestra Señora de las Aguas. <a href="https://bogota.gov.co/internacional/planes-en-bogota-conoce-las-9-iglesias-del-centro-en-semana-santa-2025">[Alcaldía de Bogotá]</a></span></li>
+      <li><b>1860 a 1885</b><span>Durante la guerra de 1860, el claustro se transforma en hospital militar y mantiene ese uso hasta 1885. <a href="https://www.100libroslibres.com/bogota-360-la-ciudad-interior-claustro-de-las-aguas-artesanias-de-colombia">[Bogotá 360]</a></span></li>
+      <li><b>1948 y 1949</b><span>La Universidad de los Andes se funda el 16 de noviembre de 1948 por un grupo de jóvenes liderado por Mario Laserna Pinzón y abre en 1949 con siete programas, 79 estudiantes y 16 profesores. <a href="https://uniandes.smartcatalogiq.com/en/2014/catalog/informacion-general/history-of-the-university">[Universidad de los Andes]</a></span></li>
+      <li><b>1974</b><span>El antiguo claustro se convierte en la sede de Artesanías de Colombia. <a href="https://www.100libroslibres.com/bogota-360-la-ciudad-interior-claustro-de-las-aguas-artesanias-de-colombia">[Bogotá 360]</a></span></li>
+      <li><b>Hoy</b><span>Según la Alcaldía de Bogotá, todavía se puede ver el cauce del río, denominado &ldquo;Las Aguas&rdquo;, en la calle 19 con carrera 3. <a href="https://bogota.gov.co/mi-ciudad/turismo/caminata-rio-san-francisco-vicacha">[Bogotá.gov.co]</a></span></li>
+    </ul>
+    <p class="note">Las fuentes no coinciden del todo. Para la ermita y la iglesia, una dice 1600 y habla de Juan Cotrina y Copete, y otra dice década de 1640 y habla de Juan Cotrina de Valero. Por eso muestro las dos versiones. Los datos de esta línea de tiempo salen de las fuentes enlazadas en cada punto.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Yo</span>
+    <h2>Selfie</h2>
+    <div class="slot has-photo">
+      <img src="selfie.jpg" alt="Tres personas posando de pie frente a una fuente de piedra, en una plaza de ladrillo del barrio" width="750" height="1000">
+    </div>
+    <div class="sill" aria-hidden="true"></div>
+  </section>
+  <section id="referencias">
+    <span class="eyebrow">Referencias</span>
+    <h2>De dónde salen los datos</h2>
+    <ul class="refs">
+      <li><b>Límites oficiales.</b> Sectores catastrales Las Aguas (003103) y La Veracruz (003109), Unidad Administrativa Especial de Catastro Distrital, servicio <a href="https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer/37">Mapa de Referencia de Bogotá</a>. Consultado el 22 de octubre de 2026.</li>
+      <li><b>Mapa base.</b> &copy; <a href="https://www.openstreetmap.org/copyright">colaboradores de OpenStreetMap</a>. Vista de satélite: imágenes &copy; <a href="https://www.esri.com">Esri</a>. Mapa interactivo hecho con <a href="https://leafletjs.com">Leaflet</a>.</li>
+      <li><b>Historia.</b> <a href="https://bogota.gov.co/mi-ciudad/turismo/caminata-rio-san-francisco-vicacha">Alcaldía de Bogotá, Caminata Río San Francisco Vicachá</a>; <a href="https://bogota.gov.co/internacional/planes-en-bogota-conoce-las-9-iglesias-del-centro-en-semana-santa-2025">Alcaldía de Bogotá, iglesias del centro</a>; <a href="https://www.100libroslibres.com/bogota-360-la-ciudad-interior-claustro-de-las-aguas-artesanias-de-colombia">Villegas Editores, <i>Bogotá 360</i> (libro disponible en 100libroslibres.com), apartado sobre el Claustro de las Aguas</a>; <a href="https://uniandes.smartcatalogiq.com/en/2014/catalog/informacion-general/history-of-the-university">Universidad de los Andes, historia de la universidad</a>.</li>
+      <li><b>Límite percibido, lugares y ruta.</b> Dibujados por mí a partir de mi experiencia en el barrio. Las posiciones son aproximadas.</li>
+      <li><b>Tipografías e ilustraciones.</b> Fredoka y Nunito, de <a href="https://fonts.google.com">Google Fonts</a>. Las ilustraciones fueron dibujadas para este trabajo.</li>
+    </ul>
+  </section>
+</main>
+
+<svg class="hills" viewBox="0 -14 1100 274" role="img" aria-label="Ilustración de los cerros orientales con Monserrate, su iglesia y el teleférico" focusable="false">
+<g transform="translate(150 16) scale(1.2)" fill="var(--surface)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M0 14 a10 10 0 0 1 10 -10 a14 14 0 0 1 26 -2 a10 10 0 0 1 14 12 z"/></g>
+<g transform="translate(430 0) scale(0.9)" fill="var(--surface)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M0 14 a10 10 0 0 1 10 -10 a14 14 0 0 1 26 -2 a10 10 0 0 1 14 12 z"/></g>
+<g transform="translate(930 12) scale(1.1)" fill="var(--surface)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M0 14 a10 10 0 0 1 10 -10 a14 14 0 0 1 26 -2 a10 10 0 0 1 14 12 z"/></g>
+<path d="M0 190 C80 175 150 148 230 138 C280 132 320 108 360 104 C420 100 470 124 520 122 C580 118 620 96 680 78 C720 66 760 66 800 66 C860 66 900 86 960 106 C1020 126 1060 136 1100 138 L1100 260 L0 260 Z" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M0 222 C100 207 200 190 320 194 C440 198 520 172 620 158 C700 146 760 130 820 126 C900 122 980 142 1100 152 L1100 260 L0 260 Z" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<g transform="translate(60 214) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(100 208) scale(0.9)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(150 202) scale(1.1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(250 194) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(285 196) scale(0.9)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(370 198) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(410 199) scale(0.8)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(470 186) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(520 176) scale(0.9)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(870 132) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(910 130) scale(0.9)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(990 146) scale(1.1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(1040 150) scale(1)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<g transform="translate(1075 153) scale(0.9)"><rect x="-2" y="-4" width="4" height="8" fill="var(--brick)" stroke="var(--fg)" stroke-width="1.5"/><polygon points="-9,-3 0,-24 9,-3" fill="var(--leaf)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/></g>
+<rect x="632" y="140" width="26" height="18" rx="3" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="646" y1="146" x2="772" y2="72" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M703 135.0 L709 109.0 M715 135.0 L709 109.0 M702 111.0 h14" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<g transform="translate(686.3 122.3)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="-9" y="7" width="18" height="12" rx="3" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="-5" y="10" width="4" height="5" fill="var(--surface)"/><rect x="1" y="10" width="4" height="5" fill="var(--surface)"/></g>
+<g transform="translate(734.2 94.2)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="-9" y="7" width="18" height="12" rx="3" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect x="-5" y="10" width="4" height="5" fill="var(--surface)"/><rect x="1" y="10" width="4" height="5" fill="var(--surface)"/></g>
+<rect x="764" y="64" width="72" height="9" rx="3" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="780" y="42" width="40" height="22" fill="var(--surface)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M777 42 L800 28 L823 42 Z" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="793" y="20" width="14" height="22" fill="var(--surface)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M790 20 L800 8 L810 20 Z" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M800 8 V-8 M795 -3 H805" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M795 64 v-9 a5 5 0 0 1 10 0 v9 Z" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="784" y="48" width="6" height="8" rx="3" fill="var(--p5)" stroke="var(--fg)" stroke-width="1.5"/><rect x="810" y="48" width="6" height="8" rx="3" fill="var(--p5)" stroke="var(--fg)" stroke-width="1.5"/>
+<circle cx="800" cy="28" r="3" fill="var(--p4)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="0" y="216" width="60" height="44" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="10" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="42" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="10" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="42" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="60" y="230" width="48" height="30" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="70" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="90" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="108" y="194" width="44" height="66" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="118" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="134" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="118" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="134" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="118" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="134" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="152" y="204" width="44" height="56" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="162" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="178" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="162" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="178" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="162" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="178" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="196" y="194" width="44" height="66" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="206" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="222" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="206" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="222" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="206" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="222" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="240" y="230" width="52" height="30" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="250" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="274" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="292" y="222" width="44" height="38" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="302" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="318" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="302" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="318" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="336" y="230" width="48" height="30" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="346" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="366" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="384" y="230" width="52" height="30" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="394" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="418" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="436" y="230" width="48" height="30" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="446" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="466" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="484" y="216" width="44" height="44" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="494" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="510" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="494" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="510" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="528" y="194" width="44" height="66" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="538" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="554" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="538" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="554" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="538" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="554" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="572" y="230" width="48" height="30" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="582" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="602" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="620" y="230" width="52" height="30" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="630" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="654" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="672" y="204" width="52" height="56" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="682" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="706" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="682" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="706" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="682" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="706" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="724" y="216" width="48" height="44" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="734" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="754" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="734" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="754" y="244" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="772" y="194" width="44" height="66" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="782" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="798" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="782" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="798" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="782" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="798" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="816" y="194" width="60" height="66" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="826" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="858" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="826" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="858" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="826" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="858" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="876" y="230" width="52" height="30" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="886" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="910" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="928" y="204" width="52" height="56" fill="var(--p2)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="938" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="962" y="214" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="938" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="962" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="938" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="962" y="250" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="980" y="194" width="44" height="66" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="990" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1006" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="990" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1006" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="990" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1006" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1024" y="194" width="44" height="66" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1034" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1050" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1034" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1050" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1034" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1050" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1068" y="194" width="44" height="66" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1078" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1094" y="204" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1078" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1094" y="222" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1078" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="1094" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<g aria-label="BD Bacatá">
+<rect x="235" y="96" width="34" height="164" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="240" y="70" width="24" height="26" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="245" y="52" width="14" height="18" fill="var(--p5)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M252 52 V28" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="236" y1="108" x2="268" y2="108" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="120" x2="268" y2="120" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="132" x2="268" y2="132" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="144" x2="268" y2="144" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="156" x2="268" y2="156" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="168" x2="268" y2="168" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="180" x2="268" y2="180" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="192" x2="268" y2="192" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="204" x2="268" y2="204" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="216" x2="268" y2="216" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="228" x2="268" y2="228" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="240" x2="268" y2="240" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="236" y1="252" x2="268" y2="252" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+<line x1="252" y1="96" x2="252" y2="260" stroke="var(--fg)" stroke-width="1" opacity=".35"/>
+</g>
+<g aria-label="Torres de City U">
+<rect x="480" y="150" width="30" height="110" fill="var(--p1)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="489" y="144" width="12" height="6" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="487" y="162" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="162" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="487" y="178" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="178" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="487" y="194" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="194" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="487" y="210" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="210" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="487" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="226" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="487" y="242" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="495" y="242" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="512" y="124" width="34" height="136" fill="var(--p3)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="523" y="118" width="12" height="6" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="519" y="136" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="136" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="152" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="152" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="168" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="168" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="184" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="184" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="200" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="200" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="216" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="216" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="232" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="519" y="248" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="531" y="248" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="548" y="164" width="26" height="96" fill="var(--p4)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="555" y="158" width="12" height="6" fill="var(--brick)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="555" y="176" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="559" y="176" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="555" y="192" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="559" y="192" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="555" y="208" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="559" y="208" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="555" y="224" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="559" y="224" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="555" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+<rect x="559" y="240" width="8" height="9" rx="1" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>
+</g>
+</svg>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
+
